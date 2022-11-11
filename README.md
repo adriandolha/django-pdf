@@ -54,6 +54,6 @@ Notes:
 
 
 ## Samples
-[WeasyPrint](sampples/weasyprint.pdf)
-[Selenium](sampples/selenium.pdf)
-[ReportLab](sampples/weasyprint.pdf)
+[WeasyPrint](samples/weasyprint.pdf)
+[Selenium](samples/selenium.pdf)
+[ReportLab](samples/weasyprint.pdf)
