@@ -46,7 +46,7 @@ Notes:
 | Dynamic Content (HTML, CSS, Javascript) | :thumbsdown: | :thumbsup: | :thumbsdown:
 | Interactive PDF | :thumbsdown: | :thumbsdown: | :thumbsup:
 | Customizations | :thumbsdown: | :thumbsdown: | :thumbsup:
-| Links | :thumbsup: | :thumbsup: | :thumbsdown:
+| Links | :thumbsup: | :thumbsup: | :thumbsup:
 | Dynamic Charts (ChartsJS) | :thumbsdown: | :thumbsup: | :thumbsdown:
 | Tables | :thumbsup: | :thumbsup: | :thumbsup:
 | PNG | :thumbsdown: | :thumbsup: | :thumbsup:
