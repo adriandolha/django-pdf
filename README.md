@@ -22,6 +22,7 @@ Notes:
 * Use weasyprint or selenium to generate PDF from existing pages and web apps.
 * weasyprint doesn't support Bootstrap or base64 PNG. The carts are created with ChartsJS (dynamic), both also with seaborn plots saved to PNG. None are included in weasyprint report.
 * Use weasyprint or selenium if you know HTML, CSS and don't want to learn reportlab.
+* You might have to add some custom CSS when generating from HTML (e.g. print media queries).
 * Use reporlab to create PDF from scratch using reportlab library (e.g. platypus).
 * reportlab is powerful and you can create custom, native-ish looking PDFs.
 * reportlab learning curve is high.
