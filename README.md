@@ -35,9 +35,7 @@ Notes:
 ![](design/architecture.png)
 </details>
 
-## Demo
-
-## WeasyPrint vs ReportLab
+## WeasyPrint vs Selenium vs ReportLab
 
 
 |                    | WeasyPrint  | Selenium  | ReportLab                      
