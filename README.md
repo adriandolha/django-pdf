@@ -27,15 +27,15 @@ We're gonna generate the PDF report using both weasyprint and reportlab so we ca
 
 |                    | WeasyPrint  | Selenium  | ReportLab                      
 | ------------------ | ----------  | --------- | ---------
-|Static Content (HTML, CSS) | :thumbsup: | :thumbsup: | no
-|Dynamic Content (HTML, CSS, Javascript) | no | yes | no
-|Interactive PDF | no | no | yes
-|Customizations | no | no | yes
-| Links | yes | yes | no
-| Dynamic Charts (ChartsJS) | no | yes | no
-| Tables | yes | yes | yes
-| PNG | no | yes | yes
-| Django Support | yes | yes | yes
+|Static Content (HTML, CSS) | :thumbsup: | :thumbsup: | :thumbsdown:
+|Dynamic Content (HTML, CSS, Javascript) | no | :thumbsup: | no
+|Interactive PDF | no | no | :thumbsup:
+|Customizations | no | no | :thumbsup:
+| Links | :thumbsup: | :thumbsup: | no
+| Dynamic Charts (ChartsJS) | no | :thumbsup: | no
+| Tables | :thumbsup: | :thumbsup: | :thumbsup:
+| PNG | no | :thumbsup: | :thumbsup:
+| Django Support | :thumbsup: | :thumbsup: | :thumbsup:
 
 
 ## Samples
