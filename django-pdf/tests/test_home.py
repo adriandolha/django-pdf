@@ -29,6 +29,15 @@ class TestHome:
         res = views.home(request)
         assert res.status_code == 200
         assert selenium_webdriver_mock.execute_cdp_cmd.called
+        selenium_webdriver_mock.get.assert_called_once_with('http://localhost:8000/')
+
+    def test_home_selenium_custom_url(self, cache_mock, selenium_webdriver_mock):
+        request = MagicMock()
+        request.GET = {'download': 'selenium', 'url': 'http://example.com'}
+        res = views.home(request)
+        assert res.status_code == 200
+        assert selenium_webdriver_mock.execute_cdp_cmd.called
+        selenium_webdriver_mock.get.assert_called_once_with('http://example.com')
 
     def test_home_reportlab_valid(self, cache_mock, reportlab_mock):
         request = MagicMock()

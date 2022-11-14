@@ -42,19 +42,20 @@ profile = {
 }
 
 
-def get_pdf():
-    URL = 'http://localhost:8000/'
+def get_pdf(url: str):
     driver = get_driver()
-
+    _url = url or 'http://localhost:8000/'
     LOGGER.debug('Starting web browser...')
     # driver.implicitly_wait(10)
     _wait = WebDriverWait(driver, 10)
-    LOGGER.debug(f'Get {URL}...')
-    driver.get(URL)
-    LOGGER.info(f'Wait for login page to load...')
-
-    login(_wait, driver)
-    _wait.until(EC.presence_of_element_located((By.ID, 'chart_expenses_per_month')))
+    LOGGER.debug(f'Get {_url}...')
+    driver.get(_url)
+    if 'localhost' in _url:
+        LOGGER.info(f'Wait for login page to load...')
+        login(_wait, driver)
+        _wait.until(EC.presence_of_element_located((By.ID, 'chart_expenses_per_month')))
+    else:
+        time.sleep(5)
     pdf_data = driver.execute_cdp_cmd("Page.printToPDF", appState)
     time.sleep(5)
     pdf_data = base64.b64decode(pdf_data['data'])

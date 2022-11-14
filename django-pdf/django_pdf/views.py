@@ -96,7 +96,7 @@ def home(request):
         pdf_data = reportlab_pdf.get_pdf(get_reports_for_first_country())
 
     if request.GET.get('download') and request.GET.get('download') == 'selenium':
-        pdf_data = selenium_pdf.get_pdf()
+        pdf_data = selenium_pdf.get_pdf(request.GET.get('url'))
     if pdf_data:
         response = HttpResponse(pdf_data, content_type='application/pdf')
         response['Content-Disposition'] = 'filename="report.pdf"'
