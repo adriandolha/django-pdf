@@ -1,0 +1,85 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+{% load render_table from django_tables2 %}
+{% block content %}
+{% if user.is_authenticated %}
+<!--About section-->
+<div class="row">
+    <h1 style="background-color: cadetblue; text-align: center; margin: 10px; padding: 5px; border-radius: 5px">
+        Django PDF</h1>
+</div>
+<!--<div class="d-md-none">hey</div>-->
+<div class="row" style="margin: 1px">
+    <div class="col-3 about" style="border: 2px solid cadetblue; border-radius: 5px;">
+        <div class="row p-2">
+            <div class="col-12">
+                <span style="font-weight: bold">Author:</span>
+                <span >Adrian Dolha</span>
+            </div >
+            <div class="col-12">
+                <span style="font-weight: bold">Date:</span>
+                <span class="ml-auto">11 Nov 2022</span>
+            </div>
+            <a href="https://github.com/adriandolha/django-pdf" class="text-primary">Github Repo</a>
+        </div>
+    </div>
+    <div class="col-9">
+        <p>
+            Django PDF is a web app used to prove how to create PDF using different libraries: <mark>weasyprint</mark>,
+            <mark>selenium</mark> and <mark>reportlab</mark>.
+            Some conclusions:
+            <ul>
+                <li>Use weasyprint to create PDF from static content (HTML, CSS).</li>
+                <li>Use selenium to create PDF from dynamic content. It handles dynamic Javascript, including React apps, Bootstrap, MUI and ChartsJS. It can also authenticate to external apps.</li>
+                <li>Use reportlab to create custom PDF from scratch. Probably the most powerful method, but also the most complex one.</li>
+            </ul>
+        </p>
+
+        <h2>Tech Stack</h2>
+
+        <div class="d-flex-inline mb-3 ms-1 me-1 mt-1 skills" style="font-size:12px">
+            <div style="display: inline; margin-top: 5px"><span class="p-2" style="border-radius: 10px; background-color: cadetblue; font-weight: bold;">python</span></div>
+            <span class="p-2 mt-1" style="border-radius: 10px; background-color: cadetblue; font-weight: bold;">django</span>
+            <span class="p-2 mt-1" style="border-radius: 10px; background-color: cadetblue; font-weight: bold;">weasyprint</span>
+            <span class="p-2 mt-1" style="border-radius: 10px; background-color: cadetblue; font-weight: bold;">selenium</span>
+            <span class="p-2 mt-1" style="border-radius: 10px; background-color: cadetblue; font-weight: bold;">seaborn</span>
+            <span class="p-2 mt-1" style="border-radius: 10px; background-color: cadetblue; font-weight: bold;">pandas</span>
+            <span class="p-2 mt-1" style="border-radius: 10px; background-color: cadetblue; font-weight: bold;">chartsjs</span>
+            <span class="p-2 mt-1" style="border-radius: 10px; background-color: cadetblue; font-weight: bold;">bootstrap5</span>
+            <span class="p-2 mt-1" style="border-radius: 10px; background-color: cadetblue; font-weight: bold;">reportlab</span>
+            <span class="p-2 mt-1" style="border-radius: 10px; background-color: cadetblue; font-weight: bold;">postgres</span>
+            <span class="p-2 mt-1" style="border-radius: 10px; background-color: cadetblue; font-weight: bold;">redis</span>
+        </div>
+    </div>
+</div>
+<br>
+<!--Report-->
+
+<div class="row">
+    <div class="col-12">
+        {% include 'avg_expenses_per_category.html' with charts=charts chart_id="avg_expenses_per_category" data=avg_expenses_per_category data_json=avg_expenses_per_category_json chart_title="Average Expenses Per Category" %}
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        {% include 'expenses_per_month.html' with charts=charts chart_id="expenses_per_month" data=expenses_per_month data_json=expenses_per_month_json chart_title="Expenses Per Month" %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-4">
+        <div class="d-flex mt-5 justify-content-start">
+            <a class="btn btn-primary m-1" href="/?download=weasyprint" role="button">WeasyPrint</a>
+            <a class="btn btn-secondary m-1" href="/?download=selenium" role="button">Selenium</a>
+            <a class="btn btn-info m-1" href="/?download=reportlab" role="button">ReportLab</a>
+        </div>
+    </div>
+</div>
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}

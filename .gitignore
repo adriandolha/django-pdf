@@ -30,3 +30,8 @@ package-lock.json
 samconfig.yaml
 settings.py
 settings_dev.py
+/avg_expenses_per_category_multiline.png
+/avg_expenses_per_category_pie.png
+/expenses_per_month_multiline.png
+/expenses.pdf
+/django-pdf/django_pdf/static/

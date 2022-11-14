@@ -1,0 +1,65 @@
+.report-table {
+    /* height: 600px !important; */
+    /* overflow: scroll; */
+
+}
+
+.header {
+    /* position:sticky;
+    top: 0 ; */
+    background-color: cadetblue;
+}
+
+.chart {
+    margin: 50px 0 0 0;
+}
+
+#chart_avg_expenses_per_category_pie {
+    position: relative;
+    height: 400px;
+    width: 100%;
+}
+
+#chart_avg_expenses_per_category_multiline {
+    position: relative;
+    height: 400px;
+    width: 100%;
+}
+
+
+@media print {
+  html, body {
+    width: 210mm;
+    height: 297mm;
+  }
+    * {
+        color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    #seaborn_chart_avg_expenses_per_category_multiline {
+        margin-top: 150px
+    }
+    #expenses-per-month-table {
+        margin-top: 100px
+    }
+    #chart_avg_expenses_per_category_pie {
+        position: relative;
+        height: 400px;
+        width: 50%;
+    }
+
+    #chart_avg_expenses_per_category_multiline {
+        position: relative;
+        height: 400px;
+        width: 50%;
+    }
+
+    .about {
+        font-size: 6px;
+    }
+    .skills {
+        font-size: 6px;
+    }
+
+}
