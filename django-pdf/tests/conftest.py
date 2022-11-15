@@ -7,14 +7,14 @@ import pytest
 
 
 def cache_get(key):
-    if key == 'admin#reports#avg_expenses_per_category':
+    if key == 'admin#reports#avg_expenses_per_category' or key == 'redshift#admin#reports#avg_expenses_per_category':
         return json.dumps(
             {
                 'columns': ['country', 'category', 'amount'],
                 'items': [['Italy', 'apartment', '200']]
             }
         )
-    if key == 'admin#reports#expenses_per_month':
+    if key == 'admin#reports#expenses_per_month' or key == 'redshift#admin#reports#expenses_per_month':
         return json.dumps(
             {
                 'columns': ['country', 'year', 'month', 'amount'],

@@ -9,9 +9,15 @@ from django.core.cache import cache
 import matplotlib.pyplot as plt
 import matplotlib
 
+from django_pdf import REPORTS_CACHE_SOURCE
 from django_pdf.logger import LOGGER
 
 matplotlib.use('SVG')
+
+
+def get_from_cache(key):
+    _key = key if REPORTS_CACHE_SOURCE == 'local' else f'{REPORTS_CACHE_SOURCE}#{key}'
+    return cache.get(_key)
 
 
 @dataclasses.dataclass
@@ -81,8 +87,8 @@ def expenses_per_month_multiline(data: dict, process_figure=png):
 
 
 def get_all_reports():
-    avg_expenses_per_category = json.loads(cache.get(f'admin#reports#avg_expenses_per_category'))
-    expenses_per_month = json.loads(cache.get(f'admin#reports#expenses_per_month'))
+    avg_expenses_per_category = json.loads(get_from_cache(f'admin#reports#avg_expenses_per_category'))
+    expenses_per_month = json.loads(get_from_cache(f'admin#reports#expenses_per_month'))
 
     return ReportsPng(
         avg_expenses_per_category_multiline=avg_expenses_per_category_multiline(avg_expenses_per_category),
@@ -92,8 +98,8 @@ def get_all_reports():
 
 
 def save_reports_to_file():
-    avg_expenses_per_category = json.loads(cache.get(f'admin#reports#avg_expenses_per_category'))
-    expenses_per_month = json.loads(cache.get(f'admin#reports#expenses_per_month'))
+    avg_expenses_per_category = json.loads(get_from_cache(f'admin#reports#avg_expenses_per_category'))
+    expenses_per_month = json.loads(get_from_cache(f'admin#reports#expenses_per_month'))
     avg_expenses_per_category_multiline(avg_expenses_per_category, process_figure=png_to_file)
     avg_expenses_per_category_pie(avg_expenses_per_category, process_figure=png_to_file)
     expenses_per_month_multiline(expenses_per_month, process_figure=png_to_file)

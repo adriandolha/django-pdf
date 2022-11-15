@@ -6,7 +6,7 @@ from django.core.cache import cache
 from django.http import HttpResponse
 from django.template import loader
 
-from django_pdf import reportlab_pdf
+from django_pdf import reportlab_pdf, REPORTS_CACHE_SOURCE
 from django_pdf import selenium_pdf
 from django_pdf import weasyprint_pdf
 from django_pdf.auth import requires_permission
@@ -30,13 +30,18 @@ class Reports:
         return self.__dict__
 
 
+def get_from_cache(key):
+    _key = key if REPORTS_CACHE_SOURCE == 'local' else f'{REPORTS_CACHE_SOURCE}#{key}'
+    return cache.get(_key)
+
+
 def get_all_reports():
-    avg_expenses_per_category_json = cache.get(f'admin#reports#avg_expenses_per_category')
+    avg_expenses_per_category_json = get_from_cache(f'admin#reports#avg_expenses_per_category')
     avg_expenses_per_category = json.loads(avg_expenses_per_category_json)
     countries = list(set(map(lambda item: item[0], avg_expenses_per_category['items'])))
     LOGGER.debug(countries)
 
-    expenses_per_month_json = cache.get(f'admin#reports#expenses_per_month')
+    expenses_per_month_json = get_from_cache(f'admin#reports#expenses_per_month')
     expenses_per_month = json.loads(expenses_per_month_json)
     # LOGGER.debug(avg_expenses_per_category_json)
     LOGGER.debug(expenses_per_month_json)
@@ -51,6 +56,8 @@ def get_all_reports():
 def view_expenses_chartsjs(request):
     template = loader.get_template('home.html')
     reports = get_reports_for_first_country()
+    LOGGER.debug('Reports for first country...')
+    LOGGER.debug(reports.expenses_per_month)
     rendered_template = template.render({'charts': 'chartsjs', **reports.to_dict()}, request)
     # LOGGER.debug(rendered_template)
     return rendered_template
@@ -59,9 +66,11 @@ def view_expenses_chartsjs(request):
 def get_reports_for_first_country():
     reports = get_all_reports()
     reports.avg_expenses_per_category['items'] = list(filter(lambda item: item[0] == reports.countries[0],
-                                                        reports.avg_expenses_per_category['items']))
-    reports.expenses_per_month['items'] = list(filter(lambda item: item[0] == reports.countries[0],
-                                                 reports.expenses_per_month['items']))
+                                                             reports.avg_expenses_per_category['items']))
+    countries = list(set(map(lambda item: item[0], reports.expenses_per_month['items'])))
+
+    reports.expenses_per_month['items'] = list(filter(lambda item: item[0] == countries[0],
+                                                      reports.expenses_per_month['items']))
     return reports
 
 

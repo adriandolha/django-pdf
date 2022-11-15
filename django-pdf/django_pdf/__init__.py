@@ -1,0 +1,1 @@
+REPORTS_CACHE_SOURCE = 'local'

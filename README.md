@@ -50,6 +50,75 @@ Notes:
 | PNG | :thumbsdown: | :thumbsup: | :thumbsup:
 | Django Support | :thumbsup: | :thumbsup: | :thumbsup:
 
+## Redshift
+We use faker to generate data and store it in S3 as CSV files per user. Then we load data into Redshift and create 
+reports. Then we cache reports in redis.
+
+### Create Tables
+```
+def create_tables(conn: RedshiftConnection):
+    with conn:
+        conn.execute("""
+        create table if not exists transactions(username varchar,
+        country varchar,
+        category varchar,
+        transaction_date varchar,
+        description varchar(MAX),
+        amount int) 
+        """)
+```
+### Load data from S3
+```
+def load_data(conn: RedshiftConnection, source: str, iam_role: str):
+    LOGGER.info(f'Loading data from {source}')
+    with conn:
+        conn.execute(f"""
+        copy transactions(username, country, transaction_date, description, amount, category) 
+        from '{source}' 
+        iam_role '{iam_role}' 
+        csv;
+        """)
+```
+### Average Expenses per Category
+```
+    def avg_expenses_per_category(self):
+        LOGGER.info('Average expenses per category...')
+        result = self.conn.execute("""
+        select country, category, abs(median(amount)::int) 
+        from (
+                select username, country, category, year, month, sum(amount) as amount
+                from (
+                    select username, country, category, DATE_PART(year, tdate) as year, DATE_PART(month, tdate) as month, amount 
+                    from transactions
+                ) 
+                group by username, country, category, year, month
+        )
+        group by country, category   
+        having country in (select * from countries limit 5)
+        order by country     
+        """).fetchall()
+        return {'columns': ('country', 'category', 'amount'), 'items': result}
+```
+### Expenses per Month
+```
+    def expenses_per_month(self):
+        LOGGER.info('Expenses per month...')
+        result = self.conn.execute("""
+        select country, year::int, month::int, abs(median(amount)::int) 
+        from (
+                select username, country, year, month, sum(amount) as amount
+                from (
+                    select username, country, DATE_PART(year, tdate) as year, DATE_PART(month, tdate) as month, amount 
+                    from transactions
+                ) 
+                group by username, country, year, month
+        )
+        group by country, year, month                
+        having country in (select * from countries limit 5)
+        order by country     
+        """).fetchall()
+        return {'columns': ('country', 'year', 'month', 'amount'), 'items': result}
+```
 
 ## Samples
 [WeasyPrint](samples/weasyprint.pdf)

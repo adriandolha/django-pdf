@@ -11,6 +11,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from django_pdf.models import Report, UserData
 from django_pdf.user_data import create_users_data, create_reports
+from django_pdf import redshift
 
 GROUPS = {
     'ADMINS': {'name': 'ADMINS',
@@ -54,8 +55,15 @@ if __name__ == "__main__":
     # Create user data
     parser.add_argument("--years", help="No of years to generate data for.")
     parser.add_argument("--no_of_users", help="No of users to generate data for.")
+    parser.add_argument("--users_offset", help="Offset from where to start users id. If no_of_users=5 and offset=6, it "
+                                               "will create users user6, user7, user8, user9, user10. ")
     parser.add_argument("--destination", help="Target dir to store generated data.")
     parser.add_argument("--categoriesfile", help="Source file to load categories.")
+
+    parser.add_argument("--redshift_host", help='Redshift host.')
+    parser.add_argument("--redshift_username", help='Redshift username.')
+    parser.add_argument("--redshift_password", help='Redshift password.')
+    parser.add_argument("--redshift_database", help='Redshift database.')
 
     args = parser.parse_args()
     # create_groups()
@@ -65,9 +73,14 @@ if __name__ == "__main__":
             print(f'Create user {args.username}')
             create_user(username=args.username, email=args.email, password=args.password, group_name=args.group)
     if args.action == "createuserdata":
+        users_offset = int(args.users_offset or "1")
         years = int(args.years or "1")
         no_of_users = int(args.no_of_users or "1")
-        create_users_data(no_of_users, args.destination, args.categoriesfile, years)
+        create_users_data(no_of_users, users_offset, args.destination, args.categoriesfile, years)
 
     if args.action == "createreports":
         create_reports(args.destination)
+
+    if args.action == "createreportsredshift":
+        redshift.create_reports_redshift(args.redshift_host, args.redshift_username, args.redshift_password,
+                                         args.redshift_database)

@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  App:
+    Type: String
+    Default: "djangopdf"
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: !Sub "${App}.data"
+
+  S3DataRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Ref App
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - sagemaker.amazonaws.com
+                - redshift.amazonaws.com
+                - redshift-serverless.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: s3redshift
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Resource:
+                  - "arn:aws:s3:::djangopdf.data"
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:DeleteObject
+                  - s3:GetBucketLocation
+                  - s3:ListBucket
+              - Effect: Allow
+                Resource:
+                  - "*"
+                Action:
+                  - redshift:DescribeClusters
+              - Effect: Allow
+                Resource:
+                  - "arn:aws:redshift:::cluster:djangopdf"
+                Action:
+                  - redshift:ModifyClusterIamRoles
+                  - redshift:CreateCluster
+              - Effect: Allow
+                Resource:
+                  - "arn:aws:iam::*:role/*"
+                Action:
+                  - iam:PassRole
+
+
+
+  DataWareHouseCluster:
+    Type: "AWS::Redshift::Cluster"
+    Properties:
+      DBName: !Sub "${App}"
+      MasterUsername: !Sub "{{resolve:ssm:/${App}/redshift/username}}"
+      MasterUserPassword: !Sub "{{resolve:ssm:/${App}/redshift/password}}"
+      NodeType: "dc2.large"
+      ClusterType: "single-node"
+      IamRoles:
+        - !Ref S3DataRole
+      Tags:
+        - Key: app
+          Value: !Ref App
+

@@ -18,6 +18,7 @@ import random
 from faker import Faker
 from django_pdf.logger import LOGGER
 from countryinfo import CountryInfo
+from django_pdf import redshift
 
 RECURRENT_EXPENSES = ['food', 'gas_electricity', 'phone', 'internet', 'transport', 'apartment']
 
@@ -113,14 +114,16 @@ def create_user_data(username, country, categories: List[Category], destination_
                 data.append([username, country, date, desc, amount, category_name])
 
     df = pd.DataFrame(columns=['username', 'country', 'date', 'desc', 'amount', 'category'], data=data)
-    df.to_json(destination_file)
+
+    df = df.rename(columns={"date": "transaction_date", "desc": "description"})
+    df.to_csv(destination_file.replace('.json', '.csv'), index=False, header=False)
 
 
-def create_users_data(no_of_users, destination_path: str, categories_file: str, years: int = 1):
+def create_users_data(no_of_users, users_offset, destination_path: str, categories_file: str, years: int = 1):
     LOGGER.info(f'Loading categories from {categories_file} ')
     categories = [Category.from_dict(category) for category in json.load(open(categories_file))]
     LOGGER.debug(categories)
-    for i in range(1, no_of_users + 1):
+    for i in range(users_offset, no_of_users + users_offset):
         country = random_country()
         username = f'user{i}'
         destination_file = f'{destination_path}/{username}.json'

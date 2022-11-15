@@ -12,4 +12,5 @@ django-tables2==2.4.1
 django-weasyprint==2.2.0
 reportlab==3.6.12
 selenium==4.6.0
-seaborn
+seaborn==0.12.1
+redshift_connector==2.0.909
